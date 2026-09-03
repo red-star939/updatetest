@@ -46,7 +46,7 @@ ShowUnInstDetails show
 
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
-  SetOverwrite ifnewer
+  SetOverwrite on
   File "version.json"
   File "test.exe"
   CreateDirectory "$SMPROGRAMS\apptest"
@@ -74,17 +74,19 @@ SectionEnd
 
 Function un.onUninstSuccess
   HideWindow
-  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name)´Â(Àº) ¿ÏÀüÈ÷ Á¦°ÅµÇ¾ú½À´Ï´Ù."
+  MessageBox MB_ICONINFORMATION|MB_OK "$(^Name) ì œê±°ê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤."
 FunctionEnd
 
 Function un.onInit
-  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "$(^Name)À»(¸¦) Á¦°ÅÇÏ½Ã°Ú½À´Ï±î?" IDYES +2
+  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "$(^Name) í”„ë¡œê·¸ë¨ì„ ì œê±°í•˜ì‹œê² ìŠµë‹ˆê¹Œ?" IDYES +2
   Abort
 FunctionEnd
 
 Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
+  Delete "$INSTDIR\Setup_update.exe"
+  Delete "$INSTDIR\latest.json"
   Delete "$INSTDIR\test.exe"
   Delete "$INSTDIR\version.json"
 

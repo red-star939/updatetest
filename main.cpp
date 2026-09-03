@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <urlmon.h>
+#include <wininet.h>
 #include <shellapi.h>
 
 #include <fstream>
@@ -8,6 +9,7 @@
 #include <vector>
 
 #pragma comment(lib, "urlmon.lib")
+#pragma comment(lib, "wininet.lib")
 #pragma comment(lib, "shell32.lib")
 
 
@@ -230,10 +232,12 @@ bool CheckAndRunUpdate()
 
 
     // --------------------------------------------------------
-    // 이전에 받은 latest.json 삭제
+    // Windows URL 캐시 및 이전에 받은 latest.json 삭제
     //
-    // 오래된 파일을 잘못 읽는 상황을 줄인다.
+    // 오래된 캐시나 파일을 잘못 읽는 상황을 방지한다.
     // --------------------------------------------------------
+
+    DeleteUrlCacheEntryA(latestJsonUrl);
 
     DeleteFileA(
         latestJson.c_str()
@@ -336,8 +340,26 @@ bool CheckAndRunUpdate()
 
 
     // --------------------------------------------------------
-    // 이전 업데이트 설치 파일 제거
+    // 사용자에게 새 버전 발견 안내
     // --------------------------------------------------------
+
+    std::string updateNotice =
+        "최신 버전(v" + latestVersion + ")이 발견되었습니다.\n"
+        "업데이트 설치 프로그램을 다운로드하여 실행합니다.";
+
+    MessageBoxA(
+        nullptr,
+        updateNotice.c_str(),
+        "Update Test",
+        MB_OK | MB_ICONINFORMATION
+    );
+
+
+    // --------------------------------------------------------
+    // 캐시 삭제 및 이전 업데이트 설치 파일 제거
+    // --------------------------------------------------------
+
+    DeleteUrlCacheEntryA(setupUrl.c_str());
 
     DeleteFileA(
         setupPath.c_str()
