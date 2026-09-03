@@ -54,6 +54,7 @@ Section "MainSection" SEC01
   CreateShortCut "$DESKTOP\apptest.lnk" "$INSTDIR\test.exe"
   File "main.obj"
   File "main.cpp"
+  File "latest.json"
 SectionEnd
 
 Section -AdditionalIcons
@@ -87,6 +88,7 @@ FunctionEnd
 Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
+  Delete "$INSTDIR\latest.json"
   Delete "$INSTDIR\main.cpp"
   Delete "$INSTDIR\main.obj"
   Delete "$INSTDIR\test.exe"
