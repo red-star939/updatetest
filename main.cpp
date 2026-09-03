@@ -14,22 +14,18 @@ std::string ReadVersion()
     while (std::getline(file, line))
     {
         size_t keyPos = line.find("\"version\"");
-
         if (keyPos == std::string::npos)
             continue;
 
         size_t colonPos = line.find(':', keyPos);
-
         if (colonPos == std::string::npos)
             continue;
 
         size_t firstQuote = line.find('"', colonPos);
-
         if (firstQuote == std::string::npos)
             continue;
 
         size_t secondQuote = line.find('"', firstQuote + 1);
-
         if (secondQuote == std::string::npos)
             continue;
 
@@ -51,6 +47,40 @@ LRESULT CALLBACK WindowProc(
 {
     switch (uMsg)
     {
+    case WM_CREATE:
+    {
+        CreateWindowA(
+            "BUTTON",
+            "Test Button",
+            WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+            190,
+            160,
+            120,
+            35,
+            hwnd,
+            (HMENU)1001,
+            ((LPCREATESTRUCT)lParam)->hInstance,
+            nullptr
+        );
+
+        return 0;
+    }
+
+    case WM_COMMAND:
+    {
+        if (LOWORD(wParam) == 1001)
+        {
+            MessageBoxA(
+                hwnd,
+                "Button works.",
+                "Update Test",
+                MB_OK | MB_ICONINFORMATION
+            );
+        }
+
+        return 0;
+    }
+
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -61,7 +91,7 @@ LRESULT CALLBACK WindowProc(
         TextOutA(
             hdc,
             200,
-            120,
+            100,
             text,
             lstrlenA(text)
         );
@@ -79,7 +109,12 @@ LRESULT CALLBACK WindowProc(
         return 0;
     }
 
-    return DefWindowProcA(hwnd, uMsg, wParam, lParam);
+    return DefWindowProcA(
+        hwnd,
+        uMsg,
+        wParam,
+        lParam
+    );
 }
 
 int WINAPI WinMain(
