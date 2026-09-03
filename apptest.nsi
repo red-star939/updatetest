@@ -47,6 +47,7 @@ ShowUnInstDetails show
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
+  File "version.json"
   File "test.exe"
   CreateDirectory "$SMPROGRAMS\apptest"
   CreateShortCut "$SMPROGRAMS\apptest\apptest.lnk" "$INSTDIR\test.exe"
@@ -89,6 +90,7 @@ Section Uninstall
   Delete "$INSTDIR\main.cpp"
   Delete "$INSTDIR\main.obj"
   Delete "$INSTDIR\test.exe"
+  Delete "$INSTDIR\version.json"
 
   Delete "$SMPROGRAMS\apptest\Uninstall.lnk"
   Delete "$SMPROGRAMS\apptest\Website.lnk"
