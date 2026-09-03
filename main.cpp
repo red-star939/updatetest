@@ -393,7 +393,7 @@ bool CheckAndRunUpdate()
 
 
     // --------------------------------------------------------
-    // 다운로드한 Setup.exe 실행
+    // 다운로드한 Setup.exe 실행 (업데이트 모드)
     // --------------------------------------------------------
 
     HINSTANCE result =
@@ -401,7 +401,7 @@ bool CheckAndRunUpdate()
             nullptr,
             "open",
             setupPath.c_str(),
-            nullptr,
+            "/UPDATE",
             folder.c_str(),
             SW_SHOWNORMAL
         );

@@ -9,23 +9,51 @@
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
-; MUI 1.67 compatible ------
+!include "FileFunc.nsh"
+!include "LogicLib.nsh"
 !include "MUI.nsh"
+
+Var IsUpdate
 
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
+Function .onInit
+  ${GetParameters} $R0
+  ${GetOptions} $R0 "/UPDATE" $R1
+  ${IfNot} ${Errors}
+    StrCpy $IsUpdate "1"
+    Sleep 1000
+  ${Else}
+    StrCpy $IsUpdate "0"
+  ${EndIf}
+FunctionEnd
+
+Function SkipIfUpdate
+  ${If} $IsUpdate == "1"
+    Abort
+  ${EndIf}
+FunctionEnd
+
 ; Welcome page
+!define MUI_PAGE_CUSTOMFUNCTION_PRE SkipIfUpdate
 !insertmacro MUI_PAGE_WELCOME
+
 ; License page
+!define MUI_PAGE_CUSTOMFUNCTION_PRE SkipIfUpdate
 !insertmacro MUI_PAGE_LICENSE "License.txt"
+
 ; Directory page
+!define MUI_PAGE_CUSTOMFUNCTION_PRE SkipIfUpdate
 !insertmacro MUI_PAGE_DIRECTORY
-; Instfiles page
+
+; Instfiles page (설치 진행 페이지 - 업데이트 시 바로 이 페이지만 표시)
 !insertmacro MUI_PAGE_INSTFILES
+
 ; Finish page
+!define MUI_PAGE_CUSTOMFUNCTION_PRE SkipIfUpdate
 !define MUI_FINISHPAGE_RUN "$INSTDIR\test.exe"
 !insertmacro MUI_PAGE_FINISH
 
@@ -34,8 +62,6 @@
 
 ; Language files
 !insertmacro MUI_LANGUAGE "Korean"
-
-; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "Setup.exe"
@@ -69,6 +95,12 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+
+  ; 업데이트 모드일 경우 완료 후 자동으로 창 닫고 새 버전 실행
+  ${If} $IsUpdate == "1"
+    SetAutoClose true
+    ExecShell "open" "$INSTDIR\test.exe"
+  ${EndIf}
 SectionEnd
 
 
