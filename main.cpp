@@ -51,25 +51,6 @@ LRESULT CALLBACK WindowProc(
 {
     switch (uMsg)
     {
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hwnd, &ps);
-
-        const char* text = "Hello ZERO";
-
-        TextOutA(
-            hdc,
-            200,
-            120,
-            text,
-            lstrlenA(text)
-        );
-
-        EndPaint(hwnd, &ps);
-        return 0;
-    }
-
     case WM_CLOSE:
         DestroyWindow(hwnd);
         return 0;
