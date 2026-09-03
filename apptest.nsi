@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "apptest"
-!define PRODUCT_VERSION "0.0.1"
+!define PRODUCT_VERSION "0.0.2"
 !define PRODUCT_PUBLISHER "¾Æ¸ô¶û¾î¶»°ÔµçµÉ°ÅÀÓ, Inc."
 !define PRODUCT_WEB_SITE "https://github.com/red-star939/updatetest"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\test.exe"
@@ -47,6 +47,7 @@ ShowUnInstDetails show
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
+  File "version.json"
   File "test.exe"
   CreateDirectory "$SMPROGRAMS\apptest"
   CreateShortCut "$SMPROGRAMS\apptest\apptest.lnk" "$INSTDIR\test.exe"
@@ -89,6 +90,7 @@ Section Uninstall
   Delete "$INSTDIR\main.cpp"
   Delete "$INSTDIR\main.obj"
   Delete "$INSTDIR\test.exe"
+  Delete "$INSTDIR\version.json"
 
   Delete "$SMPROGRAMS\apptest\Uninstall.lnk"
   Delete "$SMPROGRAMS\apptest\Website.lnk"
